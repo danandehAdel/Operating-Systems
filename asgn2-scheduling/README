@@ -1,0 +1,55 @@
+--------------------------
+README: assignment 2 (lottery scheduler)
+--------------------------
+Class: CMPS 111
+Date: 2/8/2016
+
+--------------------------
+Special Note(s)
+-------------------------- 
+After consulting with Dr Long, we did not use a shared repo on Git.
+Instead, we pair-programmed our final implementations on the team 
+captains computer (Tims) and used the other computers as multiple 
+testing environments for building and compiling different kernel 
+versions.  
+
+Due to the complexity of this project, the pseudo-code in our DesignDoc 
+heavily focuses on the additions or changes we made to the default 
+kernel in order to implement a lottery scheduler.
+
+--------------------------
+Edited files
+--------------------------
+sched_ule.c
+kern_switch.c
+kern_resource.c
+runq.h
+kern_thread.h
+proc.h
+
+--------------------------
+Test programs and other files:
+--------------------------
+fork_bomb.c
+write_bomb.c
+Makefile
+README
+DESIGN.pdf 
+
+--------------------------
+Build/Run Instructions:
+-------------------------- 
+1. Use 'make ' to create 'fork_bomb' and 'write_bomb' executables.
+2. 'fork_bomb' takes in a single INT.  
+2. 'write_bomb' takes in an IN file and an OUT file.  
+Note: 'make clean' removes executables, 'in', 'out' (used in testing).
+
+--------------------------
+Test Instructions:
+--------------------------
+After building using the 'make' command: 
+Test 1: ./fork_bomb 10000000 > in
+Test 2: ./write_bomb in out; diff in out 
+The first test will print out the contents of the two files to standard
+out while test 2 will print the contents of test1.txt to standard out 
+and then exit with an error message.
