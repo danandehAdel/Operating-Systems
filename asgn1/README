@@ -1,0 +1,83 @@
+Adel Danandeh
+Assignment 1
+Created 1/23/16
+=====================================================
+ Compiling
+===========
+To build the shell:
+make
+
+To clean up the temporary object files:
+make clean
+
+=====================================================
+ Running
+=========
+
+To run the shell:
+./myshell
+
+Format of a command in the myshell:
+
+1. exit: to exit out of the shell (myshell)
+2. ls
+3. ls -l
+4. ls -l > file
+5. sort < scores
+6. ls -l | more
+
+=====================================================
+README
+
+This file:
+
+Makefile
+Make object file from .c file and combines the object file to make 
+an executable file to run the shell program. 
+
+lex.yy.c
+A flex file that reads a command line and parses it into an array
+of arguments by using regular expression rules specified to match 
+with a commonly known word (command) or special character (option
+to command).
+
+myshell.c
+The main file for the myshell.c. This calls and executes requests
+from the command prompt.
+=====================================================
+Functions in myshell.c
+
+ void inputRedirect()
+
+ The function inputRedirect takes three arguments char **args, index   
+ of the file that we want to open, and an Int value for a flag to see  
+ when we need to to input redirection. This function does not return    
+ any value. The purpose of this function is to do input redirection when
+ there is character "<" entered by user in the command line. Open file 
+ and check for successful open file. Reset the flag for input          
+ redirection. Store stdin to fileIn and check to see if it was done   
+ successfully.          
+
+
+ void outputRedirect()
+ 
+ The function outputRedirect takes three arguments char **args, index   
+ of the file that we want to open, and an Int value for a flag to see   
+ when we need to to output redirection. This function does not return    
+ any value. The purpose of this function is to do output redirection when
+ there is character ">" entered by user in the command line. Open file  
+ and check for successful open file. Reset the flag for output          
+ redirection. Store stdout to fileOut and check to see if it was done   
+ successfully.                                                          
+                                                
+
+ void pipeCommand():
+
+ The function pipeCommand takes in two arguments           
+ char **args and char **rightArgs. The purpose if this     
+ is to do pipe in the case that user enters special       
+ character "|". This function does not return any value.
+ Argument args is the entire arguments that is entered by 
+ user, and rightArgs are the arguments that are after "|".
+ We fork a child process in this function in order to create
+ a pipe between a child and its parent.

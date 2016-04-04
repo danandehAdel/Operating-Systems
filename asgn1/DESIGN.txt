@@ -1,0 +1,112 @@
+Design Document
+Adel Danandeh
+addanand@ucsc.edu
+CMPS111, winter 2016
+===========================================================================
+Goals
+The purpose of this assignment is to create a simple shell program, which
+it handles specific shell commands. 
+
+Available Resources
+Both lex.l and part of myshell.c have been provided to us.
+
+Available System Calls
+exit(), fork(), execvp(), waitpid(), open(), close(), dup2(), pipe(). 
+
+Design
+The overall design is to create a shell that takes a command (entire line 
+entered by user) and then based on what commands are given to the shell
+they will be execute accordingly. Here is how myshell.c is structured:
+
+**************************************************************************
+ - function inputRedirect 
+   - If the flag passed in to the function is set (for input redirection)
+	- Open the file using the file's index that is passed in to function
+	- Check for a successful file open
+	- reset the flag for input redirection
+	- call dup2
+	- if return value of dup2 is -1 is error
+   - return nothing
+
+
+ - function outputRedirect
+    - If the flag passed in to the function is set (for output redirection)
+	- Open the file using the file's index that is passed in to function
+	- Check for a successful file open
+	- reset the flag for input redirection
+	- call dup2
+	- if the return value of dup2 is -1 is error
+    - return nothing
+
+
+ - function pipeCommand 
+
+  - Create an Int array of size 2 (fd[2]) for holding file descriptor values
+  - Int variable to hold the values of the first and the second fork()
+  
+  - Call the system call pipe of the file descriptor
+  - fork a child if its return value is negative -> there was an error
+  - If the return value of the fork() is equal to 0
+        - close file discriptor (fd[0])
+	- dup2(fd[1],1) put STDOUT to fd[1]
+	- call execvp
+  - Otherwise (when we are in the parent)
+	- close STDOUT (fd[1])
+	- wait
+ 
+
+  - fork a child again and check for errors
+	- close STDOUT (fd[1])
+	- dup2(fd[0], 0) put STDIN into fd[0]
+	- call execvp
+  - Otherwise (when we are in the parent process)
+	- close STDIN
+	- wait for the child process to be done
+
+
+
+ - main
+  - define and initialize flags to zero for output/input redirection and pip
+     - Infinite loop 
+	- Loop through the entire command entered by the user
+	  - Check to see if there was any command given to the shell
+          - In order to exit out of shell type exit
+	  
+	  - If you see a symbol "<" in the command line
+	     - check to see if there was any file entered after "<"
+             - get the index of the file 
+             - set a flag for input redirection
+	     - make the "<" character null (we don't want to execute it)
+
+	  - If you see a symbol ">" in the command line
+	     - Check to see if there was any file entered after ">"
+             - get the index of the file
+ 	     - set a flag for output redirection
+	     - make the ">" character null (we don't want to execute it)   
+	  
+	  - If you see a symbol "|" in the command line you pip
+	     - Check to see if there was any args entered after "|"
+ 	     - get the index of arg after "|" character
+	     - store the arguments after "|" 
+	     - make the "|" character null
+	     - set the flag for pip
+
+ 	- create a child process using fork()
+	  - If its return value is negative print out error (fork has failed)
+	  - If the return value of the fork is 0 we are inside child process
+	     
+	     - Call function inputRedirect to take care of input redirection 	     
+	     - Call function outputRedirect to take care of output redirection	     
+	     - Check to see if the flag is set fir pip
+		- call pipeCommand function to do the pipe
+		- reset the flag
+	    
+  	     - Execute the commands using system call execvp
+	      if the return value of execvp(first arg, rest of args) is negative
+
+	- If the return value of fork() is negative that means we are 
+	  inside the parent process and we have to wait for the child to
+          be done.
+	 
+
+
